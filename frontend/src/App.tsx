@@ -7,7 +7,9 @@ import { useTransformers } from './hooks/useTransformers';
 const TransformerTable = lazy(() => 
   import('./features/transformer-table/TransformerTable')
     .then(module => ({ default: module.TransformerTable })));
-
+const VoltageChart = lazy(() => 
+  import('./features/voltage-chart/VoltageChart')
+    .then(module => ({ default: module.VoltageChart }))); 
 
 function App() {
   const { data: transformers, isLoading, isError, error } = useTransformers();
@@ -51,8 +53,12 @@ function App() {
        <main className="flex flex-col lg:flex-row gap-8 p-4 lg:p-8 w-full ">
 
         {/* line chart */}
-        <section className="flex-1 w-full lg:w-1/2">
-          line chart
+       <section className="flex-1 w-full lg:w-1/2">
+          <ErrorBoundary>
+            <Suspense fallback={<div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
+              <VoltageChart transformers={transformers || []} />
+            </Suspense>
+          </ErrorBoundary>
         </section>
 
         {/* table */}

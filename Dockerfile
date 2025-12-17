@@ -1,31 +1,23 @@
-# Base stage
-FROM node:lts as base
-COPY ./frontend /frontend
-RUN rm -rf /frontend/node_modules
+# Base (deps)
+FROM node:20-alpine AS base
 WORKDIR /frontend
+
+COPY frontend/package*.json ./
 RUN npm ci --legacy-peer-deps
 
-# Development Stage
-FROM base as dev
-COPY frontend/ .
+COPY frontend .
+
+# Dev
+FROM base AS dev
 CMD ["npm", "run", "dev"]
 
-# Builder Stage (Production)
-FROM base as builder
-COPY frontend/ .
+# Build
+FROM base AS builder
 RUN npm run build
 
-# Production Serve Stage
+# Prod
 FROM nginx:alpine
 COPY --from=builder /frontend/dist /usr/share/nginx/html
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-    root /usr/share/nginx/html; \
-    index index.html index.htm; \
-    try_files $uri $uri/ /index.html; \
-    } \
-    }' > /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
-

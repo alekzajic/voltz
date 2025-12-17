@@ -21,6 +21,7 @@ const columns = [
 ];
 
 export const TransformerTable = memo(({ transformers }: TransformerTableProps) => {
+    // Get state from the store
     const {
         searchQuery,
         setSearchQuery,
@@ -37,6 +38,7 @@ export const TransformerTable = memo(({ transformers }: TransformerTableProps) =
         toggleTransformerSelection: state.toggleTransformerSelection
     })));
 
+    // Filter transformers based on search and health filter
     const filteredTransformers = useMemo(() => 
         transformers.filter((t) => {
         const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) 
@@ -46,6 +48,7 @@ export const TransformerTable = memo(({ transformers }: TransformerTableProps) =
         return matchesSearch && matchesHealth;
     }), [transformers, searchQuery, healthFilter]);
 
+    // Get unique health statuses
     const uniqueHealthStatuses = ['All', ...new Set(transformers.map(t => t.health))];
 
     return (
