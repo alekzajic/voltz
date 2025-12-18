@@ -16,8 +16,7 @@ const columns = [
     { id: 'chart', header: 'Chart', className: 'flex-[0_0_80px] text-center' },
     { id: 'name', header: 'Name', className: '' },
     { id: 'region', header: 'Region', className: '' },
-    { id: 'health', header: 'Health', className: '' },
-    { id: 'voltage', header: 'Last Voltage', className: 'text-right' },
+    { id: 'health', header: 'Health', className: 'text-right' },
 ];
 
 export const TransformerTable = memo(({ transformers }: TransformerTableProps) => {
@@ -99,11 +98,8 @@ export const TransformerTable = memo(({ transformers }: TransformerTableProps) =
                                     </TableCell>
                                     <TableCell className="font-medium text-gray-900 text-xs">{t.name}</TableCell>
                                     <TableCell className="text-gray-500 text-xs">{t.region}</TableCell>
-                                    <TableCell className="text-xs">
+                                    <TableCell className="text-xs text-right">
                                         <StatusBadge status={t.health} />
-                                    </TableCell>
-                                    <TableCell className="text-right text-gray-500 font-mono text-xs">
-                                        {t.lastTenVoltageReadings[0]?.voltage || 'N/A'} V
                                     </TableCell>
                                 </TableRow>
                             ))}

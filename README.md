@@ -41,8 +41,9 @@ A React-based web application for visualizing transformer asset data.
    ```
 2. Install & Start:
    ```bash
-   npm install && npm run dev
+   npm install --legacy-peer-deps && npm run dev
    ```
+Using a flag `--legacy-peer-deps` is required due to a react version mismatch between the project and the visx library.
 
 ### Deployment
 1. Make the script executable:
