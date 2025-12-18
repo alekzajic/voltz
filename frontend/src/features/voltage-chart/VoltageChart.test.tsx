@@ -8,7 +8,7 @@ jest.mock('../../store/useAppStore', () => ({
 }));
 
 jest.mock('@visx/responsive', () => ({
-  ParentSize: ({ children }: any) => children({ width: 500, height: 300 }),
+   ParentSize: ({ children }: { children: (size: { width: number; height: number }) => React.ReactNode }) => children({ width: 500, height: 300 }),
 }));
 
 const mockUseAppStore = useAppStore as jest.MockedFunction<typeof useAppStore>;
