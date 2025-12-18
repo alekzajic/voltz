@@ -9,7 +9,7 @@ A React-based web application for visualizing transformer asset data.
 - **Persistence**: Filters and selection state are saved using local storage (Zustand).
 
 ## Tech Stack
-- React 18
+- React 19.2
 - TypeScript
 - Vite
 - Axios (Data fetching)
@@ -44,7 +44,7 @@ A React-based web application for visualizing transformer asset data.
    npm install && npm run dev
    ```
 
-### Production Deployment
+### Deployment
 1. Make the script executable:
    ```bash
    chmod +x deploy.sh
