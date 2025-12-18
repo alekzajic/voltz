@@ -1,0 +1,18 @@
+export default {
+    preset: "ts-jest",
+    testEnvironment: "jsdom",
+    transform: {
+        "^.+\\.tsx?$": [
+            "ts-jest",
+            {
+                tsconfig: {
+                    jsx: "react-jsx",
+                    esModuleInterop: true,
+                    moduleResolution: "node",
+                    allowSyntheticDefaultImports: true,
+                },
+            },
+        ],
+    },
+    setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+};
