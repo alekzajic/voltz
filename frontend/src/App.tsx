@@ -1,6 +1,6 @@
 import { Zap, Loader2, AlertCircle } from 'lucide-react';
 import { Suspense, lazy } from 'react';
-import { ErrorBoundary } from './components/ErrorBoundary';
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
 import { useTransformers } from './hooks/useTransformers';
 
 // Lazy load components

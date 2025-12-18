@@ -18,6 +18,7 @@ export const useAppStore = create<AppState>()(
             searchQuery: '',
             healthFilter: 'All',
 
+            // toggle transformer selection
             toggleTransformerSelection: (id) =>
                 set((state) => {
                     const isSelected = state.selectedTransformerIds.includes(id);
