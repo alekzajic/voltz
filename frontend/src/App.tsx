@@ -1,88 +1,78 @@
-import { Zap, Loader2, AlertCircle } from 'lucide-react';
+import { Zap, Loader2 } from 'lucide-react';
 import { Suspense, lazy } from 'react';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-import { useTransformers } from './hooks/useTransformers';
+import { Dashboard } from './pages/Dashboard';
 
 // Lazy load components
-const TransformerTable = lazy(() => 
-  import('./features/transformer-table/TransformerTable')
-    .then(module => ({ default: module.TransformerTable })));
-const VoltageChart = lazy(() => 
-  import('./features/voltage-chart/VoltageChart')
-    .then(module => ({ default: module.VoltageChart }))); 
+const TransformerCards = lazy(() =>
+  import('./features/transformer-cards/TransformerCards')
+    .then(module => ({ default: module.TransformerCards })));
 
 function App() {
-  const { data: transformers, isLoading, isError, error } = useTransformers();
-
-  // loading state
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background text-primary">
-        <Loader2 className="w-10 h-10 animate-spin" />
-      </div>
-    );
-  }
-
-  // error state
-  if (isError) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background text-red-500 gap-4">
-        <AlertCircle className="w-12 h-12" />
-        <p className="text-xl font-semibold">Error loading data</p>
-        <p className="text-gray-500">{error?.message || 'Unknown error occurred.'}</p>
-      </div>
-    );
-  }
-
-
   return (
-     <div className="w-screen min-h-screen bg-background flex flex-col mx-auto font-sans text-gray-900">
-      {/* Header */}
-      <header className="bg-surface border-b border-gray-200 p-4 sticky top-0 z-10 w-full shadow-sm">
-        <div className="flex-row flex items-center gap-3 w-full container mx-auto">
-          <div className="bg-primary/10 p-2 rounded-lg">
-            <Zap className="text-primary w-6 h-6" />
+    <BrowserRouter>
+      <div className="w-screen min-h-screen bg-background flex flex-col mx-auto font-sans text-gray-900">
+        <header className="bg-surface border-b border-gray-200 p-4 sticky top-0 z-10 w-full shadow-sm">
+          <div className="flex-row flex items-center justify-between w-full container mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="bg-primary/10 p-2 rounded-lg">
+                <Zap className="text-primary w-6 h-6" />
+              </div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                VoltZ
+              </h1>
+            </div>
+            <nav className="flex gap-4">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-100'
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/cards"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-100'
+                  }`
+                }
+              >
+                Cards
+              </NavLink>
+            </nav>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            VoltZ
-          </h1>
-        </div>
-      </header>
+        </header>
 
-      {/* main Content */}
-       <main className="flex flex-col lg:flex-row gap-8 p-4 lg:p-8 w-full ">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/cards"
+            element={
+              <ErrorBoundary>
+                <Suspense fallback={
+                  <div className="flex items-center justify-center h-64">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                }>
+                  <TransformerCards />
+                </Suspense>
+              </ErrorBoundary>
+            }
+          />
+        </Routes>
 
-        {/* line chart */}
-       <section className="flex-1 w-full lg:w-1/2">
-          <ErrorBoundary>
-            <Suspense fallback={<div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>}>
-              <VoltageChart transformers={transformers || []} />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-
-        {/* table */}
-        <section className="flex-1 w-full lg:w-1/2">
-          <ErrorBoundary>
-            <Suspense fallback={
-                <div className="h-64 flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                </div>
-            }>
-              <TransformerTable transformers={transformers || []} />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-
-      </main>
-
-     {/* footer */}
-      <footer className="bg-surface border-t border-gray-200 p-6 mt-auto">
-        <div className="flex-row mx-auto text-center text-gray-500 text-sm">
-          &copy; {new Date().getFullYear()} VoltZ.
-        </div>
-      </footer>
-    </div>
+        <footer className="bg-surface border-t border-gray-200 p-6 mt-auto">
+          <div className="flex-row mx-auto text-center text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} VoltZ.
+          </div>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
